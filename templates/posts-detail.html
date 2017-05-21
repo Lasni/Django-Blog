@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load urlify %}
+{% load crispy_forms_tags %}
+
+{% block head-title %}{{ instance.title }} | {{ block.super }}{% endblock head-title %}
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+	<h1>{{ title }} | <small>{% if instance.draft %}<span style="color:red;">Draft </span>{% endif %}{{ instance.publish }}</small></h1>
+	{% if instance.user.get_full_name %}
+	<p>Author: {{ instance.user.get_full_name }}</p>
+	{% endif %}
+
+	<p>
+		<div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+	</p>
+
+	{% if instance.image %}
+	<img src="{{ instance.image.url }}" class="img-responsive"/>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="post-detail-item">{{ instance.get_markdown }}
+				<hr/>
+				<br/>
+
+				<div>
+					<p class="lead">Comments</p>
+					<form method="POST" action="."> {% csrf_token %}
+						{{ comment_form | crispy }}
+						<input type="submit" name="" value="Post comment" class="btn btn-default">
+					</form>
+					<hr/>
+					<div class="">
+						{% for comment in comments %}
+
+						<blockquote>
+							<p>{{comment.content}}</p>
+							<footer>{{comment.user}} | {{comment.timestamp|timesince}} ago</footer>
+						</blockquote>
+						
+						<hr/>
+						{% endfor %}
+					</div>
+
+					<br/>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<p>
+		<!-- <div class="fb-comments" data-href="{{ request.build_absolute_uri }}" data-numposts="5"></div> -->
+
+		<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+			Facebook
+		</a>
+
+		<a href="https://twitter.com/home?status={{ instance.content|urlify }}%20{{ request.build_absolute_uri }}">
+			Twitter
+		</a>
+
+		<a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>
+			Google Plus
+		</a>
+
+		<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ instance.title }}&summary={{ share_string }}&source={{ request.build_absolute_uri }}">
+			Linkedin
+		</a>
+	</p>
+
+
+</div>
+{% endblock content %}

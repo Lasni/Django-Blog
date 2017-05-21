@@ -1,0 +1,102 @@
+{% load staticfiles %}
+<!--DOCTYPE html -->
+
+<html>
+<head>
+	<title>
+		{% block head-title %}Lasni's blog{% endblock head-title %}
+	</title>
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel='stylesheet' href='{% static "css/base.css" %}'/>
+	<style>
+		{% block style %}{% endblock style %}
+	</style>
+
+	{% block head_extra %} {% endblock head_extra%}
+</head>
+<body>
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+
+	{% include "messages-display.html" %}
+	<div class='container'>
+		{% block content %}
+		{% endblock content %}
+	</div>
+
+	<script
+	src="http://code.jquery.com/jquery-1.12.4.min.js"
+	integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+	crossorigin="anonymous"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.6/marked.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(".content-markdown").each(function(){
+				var content = $(this).text()
+				var markedContent = marked(content)
+				$(this).html(markedContent)
+			})
+
+			$(".post-detail-item img").each(function(){
+				$(this).addClass("img-responsive");
+			})
+
+			// preview-title
+			var titleInput = $("#id_title")
+
+			// preview-content
+			var contentInput = $("#id_content")
+
+
+			function setContent(value){
+				var markedContent = marked(value)
+				$("#preview-content").html(markedContent)
+				$("#preview-content img").each(function(){
+					$(this).addClass("img-responsive")
+				})
+			}
+
+			setContent(contentInput.val())
+			contentInput.keyup(function(){
+				var newContent = $(this).val()
+				setContent(newContent)
+			})
+
+			function setTitle(value){
+				$("#preview-title").text(value)
+			}
+
+			setTitle(titleInput.val())
+			titleInput.keyup(function(){
+				var newTitle = $(this).val()
+				setTitle(newTitle)
+			})
+		})
+	</script>
+
+</body>
+</html>
+
+
+
+
+
